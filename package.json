@@ -3,9 +3,14 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development"
+    "build:basehref": "npm run build:app:basehref && npm run build:deploy",
+    "build:deployurl": "npm run build:app:deployurl && npm run build:deploy",
+    "build:app:basehref": "ng build --configuration development --baseHref=http://localhost:8080/fake-cdn/",
+    "build:app:deployurl": "ng build --configuration development --deployUrl=http://localhost:8080/fake-cdn/ --baseHref=/thor/",
+    "build:deploy": "cp dist/fake-cdn/index.html fake-app-domain/thor/",
+    "start": "run-p serve:*",
+    "serve:app": "node server.js --port 4200 --dir fake-app-domain",
+    "serve:cdn": "node server.js --port 8080 --dir dist"
   },
   "private": true,
   "dependencies": {
@@ -22,10 +27,15 @@
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
+    "@angular-builders/custom-webpack": "^13.1.0",
     "@angular-devkit/build-angular": "~13.0.1",
     "@angular/cli": "~13.0.1",
     "@angular/compiler-cli": "~13.0.0",
     "@types/node": "^12.11.1",
-    "typescript": "~4.4.3"
+    "cors": "^2.8.5",
+    "express": "^4.18.1",
+    "npm-run-all": "^4.1.5",
+    "typescript": "~4.4.3",
+    "yargs": "^17.4.1"
   }
 }
